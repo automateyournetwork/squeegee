@@ -30,9 +30,12 @@
 #### Used: {{ systemInfo.used_swap }}
 #### Perecentage: {{ systemInfo.swap_percentage }}
 ## Disk
-
 ## Network
-
+{%- for interface in systemInfo.interface_list %}
+{%-     if interface.startswith("Interface:")%}
+### {{ interface }}
+{%-     endif %}
+{%- endfor %}
 #### Total
 ##### Sent: {{ systemInfo.total_bytes_sent }}
 ##### Received: {{ systemInfo.total_bytes_received }}
