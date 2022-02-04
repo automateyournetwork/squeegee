@@ -30,13 +30,47 @@
 #### Used: {{ systemInfo.used_swap }}
 #### Perecentage: {{ systemInfo.swap_percentage }}
 ## Disk
+{%- for partition in systemInfo.partition_list %}
+{%-     if partition.startswith("Device:")%}
+### {{ partition | replace("Device:","") }}
+{%-     endif %}
+{%-     if partition.startswith("Mountpoint:")%}
+#### Mountpoint: {{ partition | replace("Mountpoint:","") }}
+{%-     endif %}
+{%-     if partition.startswith("File System Type:")%}
+#### File System Type: {{ partition | replace("File System Type:","") }}
+{%-     endif %}
+{%-     if partition.startswith("Total:")%}
+#### Usage
+##### Total: {{ partition | replace("Total:","") }}
+{%-     endif %}
+{%-     if partition.startswith("Used:")%}
+##### Used: {{ partition | replace("Used:","") }}
+{%-     endif %}
+{%-     if partition.startswith("Free:")%}
+##### Free: {{ partition | replace("Free:","") }}
+{%-     endif %}
+{%-     if partition.startswith("Percent:")%}
+##### Percent: {{ partition | replace("Percent:","") }}
+{%-     endif %}
+{%- endfor %}
 ## Network
 {%- for interface in systemInfo.interface_list %}
 {%-     if interface.startswith("Interface:")%}
 ### {{ interface | replace("Interface:","") }}
+{%-     endif %}
+{%-     if interface.startswith("IP Address:")%}
+#### IP Address: {{ interface | replace("IP Address:","") }}
+{%-     endif %}
+{%-     if interface.startswith("MAC Address:")%}
+#### MAC Address: {{ interface | replace("MAC Address:","") }}
+{%-     endif %}
+{%-     if interface.startswith("Subnet Mask:")%}
+#### Subnet Mask: {{ interface | replace("Subnet Mask:","") }}
 {%-     endif %}
 {%- endfor %}
 ### Total
 #### Sent: {{ systemInfo.total_bytes_sent }}
 #### Received: {{ systemInfo.total_bytes_received }}
 ## Boot Time
+### Year: {{ systemInfo.boot_year }}, Month: {{ systemInfo.boot_month }}, Day: {{ systemInfo.boot_day }}, Hour: {{ systemInfo.boot_hour }}, Minute: {{ systemInfo.boot_minute }}, Second: {{ systemInfo.boot_second }}

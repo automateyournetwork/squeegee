@@ -18,7 +18,7 @@ squeegee_template = env.get_template('Squeegee.j2')
 def getSystemInfo():
     try:
         info={}
-        info['partition_list'] = {}
+        info['partition_list'] = []
         info['interface_list'] = []
 # System
         info['system']=platform.system()
@@ -48,15 +48,15 @@ def getSystemInfo():
 # Disk
         allPartitions=psutil.disk_partitions()
         for partition in allPartitions:
-            info['partition_list']['Device']=partition.device
-            info['partition_list']['Mountpoint']=partition.mountpoint
-            info['partition_list']['File System Type']=partition.fstype
+            info['partition_list'].append(f'Device: { partition.device }')
+            info['partition_list'].append(f'Mountpoint: { partition.mountpoint }')
+            info['partition_list'].append(f'File System Type: { partition.fstype }')
             try:
                 partitionUsage = psutil.disk_usage(partition.mountpoint)
-                info['partition_list']['Total']=str(round(partitionUsage.total / (1024.0 **3)))+" GB"
-                info['partition_list']['Used']=str(round(partitionUsage.used / (1024.0 **3)))+" GB"
-                info['partition_list']['Free']=str(round(partitionUsage.free / (1024.0 **3)))+" GB"
-                info['partition_list']['Percent']=f'{ partitionUsage.percent }%'
+                info['partition_list'].append(f'Total: { partitionUsage.total }')
+                info['partition_list'].append(f'Used: { partitionUsage.used }')
+                info['partition_list'].append(f'Free: { partitionUsage.free }')
+                info['partition_list'].append(f'Percent: { partitionUsage.percent } %')
             except PermissionError:
                 # this can be catched due to the disk that
                 # isn't ready
@@ -73,11 +73,9 @@ def getSystemInfo():
                 if str(address.family) == 'AddressFamily.AF_INET':
                     info['interface_list'].append(f'IP Address: { address.address }')
                     info['interface_list'].append(f'Subnet Mask: { address.netmask }')
-                    info['interface_list'].append(f'Default Gateway: { address.broadcast }')
                 elif str(address.family) == 'AddressFamily.AF_PACKET':
                     info['interface_list'].append(f'MAC Address: { address.address }')
                     info['interface_list'].append(f'Subet Mask: { address.netmask }')
-                    info['interface_list'].append(f'Default Gateway: { address.broadcast }')
         ## statistics since boot
         net_io = psutil.net_io_counters()
         info['total_bytes_sent']=str(round(net_io.bytes_sent/ (1024.0 **3)))+" GB"
