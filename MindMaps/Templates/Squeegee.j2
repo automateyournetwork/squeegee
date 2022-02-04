@@ -1,0 +1,39 @@
+# {{ systemInfo.hostname }}
+## System
+### {{ systemInfo.system }}
+#### Platform: {{ systemInfo.platform }}
+##### Release: {{ systemInfo.platform_release }}
+##### Version: {{ systemInfo.platform_version }}
+#### Architecture: {{ systemInfo.architecture }}
+## CPU
+### Processor: {{ systemInfo.processor }}
+### Physical Cores: {{ systemInfo.phys_cores }}
+### Total Cores: {{ systemInfo.total_cores }}
+### Frequency
+#### Max: {{ systemInfo.max_cpu_freq }}
+#### Min: {{ systemInfo.min_cpu_freq }}
+### Percentage
+{%- for item,value in systemInfo.items() if item.startswith("Core") %}
+#### {{ item }}
+##### {{ value }}
+{%- endfor %}
+### Total Usage: {{ systemInfo.total_cpu_usage }}
+## Memory
+### RAM 
+#### Total: {{ systemInfo.total_ram }}
+#### Available: {{ systemInfo.available_ram }}
+#### Used: {{ systemInfo.used_ram }}
+#### Perecentage: {{ systemInfo.ram_percentage }}
+### SWAP
+#### Total: {{ systemInfo.total_swap }}
+#### Available: {{ systemInfo.available_swap }}
+#### Used: {{ systemInfo.used_swap }}
+#### Perecentage: {{ systemInfo.swap_percentage }}
+## Disk
+
+## Network
+
+#### Total
+##### Sent: {{ systemInfo.total_bytes_sent }}
+##### Received: {{ systemInfo.total_bytes_received }}
+## Boot Time

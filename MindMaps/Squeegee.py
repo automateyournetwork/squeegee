@@ -7,9 +7,19 @@ import psutil
 import logging
 from datetime import datetime
 
+# -------------------------
+# Jinja2
+# -------------------------
+from jinja2 import Environment, FileSystemLoader
+template_dir = 'Templates/'
+env = Environment(loader=FileSystemLoader(template_dir))
+squeegee_template = env.get_template('Squeegee.j2')
+
 def getSystemInfo():
     try:
         info={}
+        info['partition_list'] = {}
+        info['network_list'] = {}
 # System
         info['system']=platform.system()
         info['platform']=platform.platform()
@@ -24,29 +34,29 @@ def getSystemInfo():
         info['max_cpu_freq'] = cpuFreq.max
         info['min_cpu_freq'] = cpuFreq.min
         for i, percentage in enumerate(psutil.cpu_percent(percpu=True, interval=1)):
-            info[f'Core_{i}']= percentage
-        info['total_cpu_usage'] = psutil.cpu_percent()
+            info[f'Core {i}']= percentage
+        info['total_cpu_usage'] = str(psutil.cpu_percent())+"%"
 # Memory
         info['total_ram']=str(round(psutil.virtual_memory().total / (1024.0 **3)))+" GB"
         info['available_ram']=str(round(psutil.virtual_memory().available / (1024.0 **3)))+" GB"
         info['used_ram']=str(round(psutil.virtual_memory().used / (1024.0 **3)))+" GB"
-        info['ram_percentage']=str(psutil.virtual_memory().percent)
+        info['ram_percentage']=str(psutil.virtual_memory().percent)+"%"
         info['total_swap']=str(round(psutil.swap_memory().total / (1024.0 **3)))+" GB"
         info['available_swap']=str(round(psutil.swap_memory().free / (1024.0 **3)))+" GB"
         info['used_swap']=str(round(psutil.swap_memory().used / (1024.0 **3)))+" GB"
-        info['swap_percentage']=str(psutil.swap_memory().percent)
+        info['swap_percentage']=str(psutil.swap_memory().percent)+"%"
 # Disk
-        info['all_partitions']=psutil.disk_partitions()
-        for partition in info['all_partitions']:
-            info[f'device_{ partition.device }']=partition.device
-            info[f'mountpoint_{ partition.device }']=partition.mountpoint
-            info[f'file_system_type_{ partition.device }']=partition.fstype
+        allPartitions=psutil.disk_partitions()
+        for partition in allPartitions:
+            info['partition_list']['Device']=partition.device
+            info['partition_list']['Mountpoint']=partition.mountpoint
+            info['partition_list']['File System Type']=partition.fstype
             try:
                 partitionUsage = psutil.disk_usage(partition.mountpoint)
-                info[f'total_partition_total_{ partition.device }']=str(round(partitionUsage.total / (1024.0 **3)))+" GB"
-                info[f'total_partition_used_{ partition.device }']=str(round(partitionUsage.used / (1024.0 **3)))+" GB"
-                info[f'total_partition_free_{ partition.device }']=str(round(partitionUsage.free / (1024.0 **3)))+" GB"
-                info[f'total_partition_percent_{ partition.device }']=partitionUsage.percent
+                info['partition_list']['Total']=str(round(partitionUsage.total / (1024.0 **3)))+" GB"
+                info['partition_list']['Used']=str(round(partitionUsage.used / (1024.0 **3)))+" GB"
+                info['partition_list']['Free']=str(round(partitionUsage.free / (1024.0 **3)))+" GB"
+                info['partition_list']['Percent']=f'{ partitionUsage.percent }%'
             except PermissionError:
                 # this can be catched due to the disk that
                 # isn't ready
@@ -60,13 +70,13 @@ def getSystemInfo():
         for interface_name, interface_addresses in ifAddrs.items():
             for address in interface_addresses:
                 if str(address.family) == 'AddressFamily.AF_INET':
-                    info[f'{interface_name}_ip_address']=address.address
-                    info[f'{interface_name}_netmask']=address.netmask
-                    info[f'{interface_name}_default_gateway']=address.broadcast
+                    info['network_list']['IP Address']=address.address
+                    info['network_list']['Subnet Mask']=address.netmask
+                    info['network_list']['Default Gateway']=address.broadcast
                 elif str(address.family) == 'AddressFamily.AF_PACKET':
-                    info[f'{interface_name}_mac_address']=address.address
-                    info[f'{interface_name}_netmask']=address.netmask
-                    info[f'{interface_name}_default_mac']=address.broadcast
+                    info['network_list']['MAC Address']=address.address
+                    info['network_list']['Subet Mask']=address.netmask
+                    info['network_list']['Default_mac']=address.broadcast
         ## statistics since boot
         net_io = psutil.net_io_counters()
         info['total_bytes_sent']=str(round(net_io.bytes_sent/ (1024.0 **3)))+" GB"
@@ -87,3 +97,17 @@ def getSystemInfo():
 
 systemInfo = json.loads(getSystemInfo())
 print (systemInfo)
+
+# -------------------------
+# Pass to Jinja2 Template 
+# -------------------------
+
+parsed_output = squeegee_template.render(systemInfo = systemInfo)
+
+# -------------------------
+# Save the markdown file
+# -------------------------
+
+with open(f"Windows/{ systemInfo['hostname'] }.md", "w") as fh:
+    fh.write(parsed_output)               
+    fh.close()
