@@ -33,10 +33,10 @@
 ## Network
 {%- for interface in systemInfo.interface_list %}
 {%-     if interface.startswith("Interface:")%}
-### {{ interface }}
+### {{ interface | replace("Interface:","") }}
 {%-     endif %}
 {%- endfor %}
-#### Total
-##### Sent: {{ systemInfo.total_bytes_sent }}
-##### Received: {{ systemInfo.total_bytes_received }}
+### Total
+#### Sent: {{ systemInfo.total_bytes_sent }}
+#### Received: {{ systemInfo.total_bytes_received }}
 ## Boot Time

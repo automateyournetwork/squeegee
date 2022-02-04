@@ -14,11 +14,11 @@
 #### Min: 0.0
 ### Percentage
 #### Core 0
-##### 4.6
+##### 21.1
 #### Core 1
 ##### 0.0
 #### Core 2
-##### 0.0
+##### 6.2
 #### Core 3
 ##### 0.0
 #### Core 4
@@ -38,14 +38,14 @@
 #### Core 11
 ##### 0.0
 #### Core 12
-##### 0.0
+##### 3.1
 #### Core 13
-##### 0.0
+##### 3.1
 #### Core 14
-##### 1.6
+##### 3.1
 #### Core 15
-##### 0.0
-### Total Usage: 1.2%
+##### 1.6
+### Total Usage: 2.9%
 ## Memory
 ### RAM 
 #### Total: 16 GB
@@ -56,17 +56,17 @@
 #### Total: 2 GB
 #### Available: -2 GB
 #### Used: 4 GB
-#### Perecentage: 166.5%
+#### Perecentage: 166.3%
 ## Disk
 ## Network
-### Interface: Wi-Fi
-### Interface: Local Area Connection* 9
-### Interface: Local Area Connection* 10
-### Interface: Ethernet
-### Interface: Bluetooth Network Connection
-### Interface: vEthernet (WSL)
-### Interface: Loopback Pseudo-Interface 1
-#### Total
-##### Sent: 0 GB
-##### Received: 1 GB
+###  Wi-Fi
+###  Local Area Connection* 9
+###  Local Area Connection* 10
+###  Ethernet
+###  Bluetooth Network Connection
+###  vEthernet (WSL)
+###  Loopback Pseudo-Interface 1
+### Total
+#### Sent: 0 GB
+#### Received: 1 GB
 ## Boot Time
