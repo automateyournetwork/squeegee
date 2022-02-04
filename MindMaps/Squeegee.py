@@ -68,15 +68,17 @@ def getSystemInfo():
         info['hostname']=socket.gethostname()
         ifAddrs = psutil.net_if_addrs()
         for interface_name, interface_addresses in ifAddrs.items():
-            for address in interface_addresses:
-                if str(address.family) == 'AddressFamily.AF_INET':
-                    info['network_list']['IP Address']=address.address
-                    info['network_list']['Subnet Mask']=address.netmask
-                    info['network_list']['Default Gateway']=address.broadcast
-                elif str(address.family) == 'AddressFamily.AF_PACKET':
-                    info['network_list']['MAC Address']=address.address
-                    info['network_list']['Subet Mask']=address.netmask
-                    info['network_list']['Default_mac']=address.broadcast
+            info['network_list'][interface_name]=interface_name
+            print(info['network_list'])
+            #for address in interface_addresses:
+                #if str(address.family) == 'AddressFamily.AF_INET':
+            #        info['network_list'][interface_name]['IP Address']=address.address
+            #         info['network_list']['Subnet Mask']=address.netmask
+            #         info['network_list']['Default Gateway']=address.broadcast
+            #     elif str(address.family) == 'AddressFamily.AF_PACKET':
+            #         info['network_list']['MAC Address']=address.address
+            #         info['network_list']['Subet Mask']=address.netmask
+            #         info['network_list']['Default_mac']=address.broadcast               
         ## statistics since boot
         net_io = psutil.net_io_counters()
         info['total_bytes_sent']=str(round(net_io.bytes_sent/ (1024.0 **3)))+" GB"
@@ -96,7 +98,6 @@ def getSystemInfo():
         logging.exception(e)
 
 systemInfo = json.loads(getSystemInfo())
-print (systemInfo)
 
 # -------------------------
 # Pass to Jinja2 Template 
