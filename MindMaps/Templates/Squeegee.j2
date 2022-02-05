@@ -56,21 +56,113 @@
 {%- endfor %}
 ## Network
 {%- for interface in systemInfo.interface_list %}
-{%-     if interface.startswith("Interface:")%}
+{%-     if interface.startswith("Interface:") %}
 ### {{ interface | replace("Interface:","") }}
 {%-     endif %}
-{%-     if interface.startswith("IP Address:")%}
+{%-     if interface.startswith("IP Address:") %}
 #### IP Address: {{ interface | replace("IP Address:","") }}
 {%-     endif %}
-{%-     if interface.startswith("MAC Address:")%}
+{%-     if interface.startswith("MAC Address:") %}
 #### MAC Address: {{ interface | replace("MAC Address:","") }}
 {%-     endif %}
-{%-     if interface.startswith("Subnet Mask:")%}
+{%-     if interface.startswith("Subnet Mask:") %}
 #### Subnet Mask: {{ interface | replace("Subnet Mask:","") }}
 {%-     endif %}
 {%- endfor %}
 ### Total
 #### Sent: {{ systemInfo.total_bytes_sent }}
 #### Received: {{ systemInfo.total_bytes_received }}
+## Processes
+{%- for process in systemInfo.processes %}
+{%-     if process.startswith("Process Name:") %}
+### {{ process | replace("Process Name:","") }}
+{%-     endif %}
+{%-     if process.startswith("Process ID:") %}
+#### ID: {{ process | replace("Process ID:","") }}
+{%-     endif %}
+{%- endfor %}
+## Services
+### Running
+{%- for service in systemInfo.auto_services if "Running" in service %}
+#### {{ service | replace("Service Name:","") | replace("State: Running","") }}
+{%- endfor %}
+### Stopped
+{%- for service in systemInfo.auto_services if "Stopped" in service %}
+#### {{ service | replace("Service Name:","") | replace("State: Stopped","")}}
+{%- endfor %}
+## Startup
+{%- for app in systemInfo.startup %}
+{%-     if app.startswith("Caption:") %}
+### {{ app | replace("Caption:","") }}
+{%-     endif %}
+{%-     if app.startswith("Location:") %}
+#### Location: {{ app | replace("Location:","") }}
+{%-     endif %}
+{%-     if app.startswith("Command:") %}
+#### Command: {{ app | replace("Command:","") }}
+{%-     endif %}
+{%- endfor %}
+## Video Card
+### {{ systemInfo.video_adapter_name }}
+#### Status: {{ systemInfo.video_adapter_status }}
+#### Description: {{ systemInfo.video_adapter_description }}
+#### Caption: {{ systemInfo.video_adapter_caption }}
+#### Device ID: {{ systemInfo.video_adapter_deviceid }}
+#### Compatibility: {{ systemInfo.video_adapter_compatibility }}
+#### Architecture: {{ systemInfo.video_adapter_arch }}
+#### Processor: {{ systemInfo.video_adapter_processor }}
+#### Memory: {{ systemInfo.video_adapter_memory }}
+#### RAM: {{ systemInfo.video_adapter_DAC_type }} 
+#### Mode: {{ systemInfo.video_adapter_mode }}
+#### Current:
+##### Bits Per Pixel: {{ systemInfo.video_adapter_current_bits_per_pixel }}
+##### Resolution:
+###### Horizon: {{ systemInfo.video_adapter_current_horizon }}
+###### Vetical: {{ systemInfo.video_adapter_current_vertical }}
+##### Number of Colors: {{ systemInfo.video_adapter_current_number_colors }} 
+##### Refresh Rate: {{ systemInfo.video_adapter_current_refresh_rate }}
+##### Scan Mode: {{ systemInfo.video_adapter_current_scan_mode }}
+#### Driver
+##### Date: {{ systemInfo.video_adapter_driver_date }}
+##### Version: {{ systemInfo.video_adapter_driver_version }}
+##### Files
+###### {{ driver }}
+#### Refresh
+##### Max: {{ systemInfo.video_adapter_max_refresh }}
+##### Min: {{ systemInfo.video_adapter_max_refresh }}
+#### DAC Type: {{ systemInfo.video_adapter_DAC_type }}
+#### Dither: {{ systemInfo.video_adapter_dither }}
+#### Monochrome: {{ systemInfo.video_adapter_mono }}
+#### Plug N Play ID: {{ systemInfo.video_adapter_pnpid }}
+## Sound Card
+{%- for card in systemInfo.sound_cards %}
+{%-     if card.startswith("Name:") %}
+### {{ card | replace("Name:","") }}
+{%-     endif %}
+{%-     if card.startswith("Product Name:") %}
+#### Product Name: {{ card | replace("Product Name:","") }}
+{%-     endif %}
+{%-     if card.startswith("Caption:") %}
+#### Caption: {{ card | replace("Caption:","") }}
+{%-     endif %}
+{%-     if card.startswith("Description:") %}
+#### Description: {{ card | replace("Description:","") }}
+{%-     endif %}
+{%-     if card.startswith("Device ID:") %}
+#### Device ID: {{ card | replace("Device ID:","") }}
+{%-     endif %}
+{%-     if card.startswith("Manufacturer:") %}
+#### Manufacturer: {{ card | replace("Manufacturer:","") }}
+{%-     endif %}
+{%-     if card.startswith("Plug N Play DeviceID:") %}
+#### Plug N Play DeviceID: {{ card | replace("Plug N Play DeviceID:","") }}
+{%-     endif %}
+{%-     if card.startswith("Power Management Supported:") %}
+#### Power Management Supported: {{ card | replace("Power Management Supported:","") }}
+{%-     endif %}
+{%-     if card.startswith("Status:") %}
+#### Status: {{ card | replace("Status:","") }}
+{%-     endif %}
+{%- endfor %}
 ## Boot Time
 ### Year: {{ systemInfo.boot_year }}, Month: {{ systemInfo.boot_month }}, Day: {{ systemInfo.boot_day }}, Hour: {{ systemInfo.boot_hour }}, Minute: {{ systemInfo.boot_minute }}, Second: {{ systemInfo.boot_second }}
