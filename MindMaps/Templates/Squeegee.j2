@@ -72,6 +72,56 @@
 ### Total
 #### Sent: {{ systemInfo.total_bytes_sent }}
 #### Received: {{ systemInfo.total_bytes_received }}
+## Applications
+{%- for app in systemInfo.applications %}
+{%-     if app.startswith("Name:") %}
+### {{ app | replace("Name:","") }}
+{%-     endif %}
+{%-     if app.startswith("Description:") %}
+#### Description: {{ app | replace("Description:","") }}
+{%-     endif %}
+{%-     if app.startswith("Caption:") %}
+#### Caption: {{ app | replace("Caption:","") }}
+{%-     endif %}
+{%-     if app.startswith("Vendor:") %}
+#### Vendor: {{ app | replace("Vendor:","") }}
+{%-     endif %}
+{%-     if app.startswith("Version:") %}
+#### Version: {{ app | replace("Version:","") }}
+{%-     endif %}
+{%-     if app.startswith("IdentifyingNumber:") %}
+#### Identifying Number: {{ app | replace("IdentifyingNumber:","") }}
+{%-     endif %}
+{%-     if app.startswith("AssignmentType:") %}
+#### Assignment Type: {{ app | replace("AssignmentType:","") }}
+{%-     endif %}
+{%-     if app.startswith("InstallDate:") %}
+#### Install
+##### Date: {{ app | replace("InstallDate:","") }}
+{%-     endif %}
+{%-     if app.startswith("InstallSource:") %}
+##### Source: {{ app | replace("InstallSource:","") }}
+{%-     endif %}
+{%-     if app.startswith("InstallState:") %}
+##### State: {{ app | replace("InstallState:","") }}
+{%-     endif %}
+{%-     if app.startswith("Language:") %}
+#### Language: {{ app | replace("Language:","") }}
+{%-     endif %}
+{%-     if app.startswith("LocalPackage:") %}
+#### Local Package: {{ app | replace("LocalPackage:","") }}
+{%-     endif %}
+{%-     if app.startswith("PackageName:") %}
+#### Package
+##### Name: {{ app | replace("PackageName:","") }}
+{%-     endif %}
+{%-     if app.startswith("PackageCode:") %}
+##### Code: {{ app | replace("PackageCode:","") }}
+{%-     endif %}
+{%-     if app.startswith("PackageCache:") %}
+##### Cache: {{ app | replace("PackageCache:","") }}
+{%-     endif %}
+{%- endfor %}
 ## Processes
 {%- for process in systemInfo.processes %}
 {%-     if process.startswith("Process Name:") %}

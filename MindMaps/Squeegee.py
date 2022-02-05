@@ -6,6 +6,7 @@ import uuid
 import psutil
 import logging
 import wmi
+import os
 from datetime import datetime
 
 # -------------------------
@@ -32,6 +33,7 @@ def getSystemInfo():
         info['startup'] = []
         info['registry'] = []
         info['sound_cards'] = []
+        info['applications'] = []
 # System
         info['system']=platform.system()
         info['platform']=platform.platform()
@@ -134,7 +136,7 @@ def getSystemInfo():
             info['video_adapter_memory'] = detail.VideoMemoryType
             info['video_adapter_mode'] = detail.VideoModeDescription
             info['video_adapter_processor'] = detail.VideoProcessor
-# Graphics Card
+# Sound Card
         for detail in c.Win32_SoundDevice ():
             info['sound_cards'].append(f'Caption: { detail.Caption }')
             info['sound_cards'].append(f'Description: { detail.Description }')
@@ -146,6 +148,24 @@ def getSystemInfo():
             info['sound_cards'].append(f'Product Name: { detail.ProductName }')
             if detail.Status:
                 info['sound_cards'].append(f'Status: { detail.Status }')
+# Applications
+        for product in c.Win32_Product ():
+            info['applications'].append(f'Name: { product.Name }')
+            info['applications'].append(f'AssignmentType: { product.AssignmentType }')
+            info['applications'].append(f'Caption: { product.Caption }')
+            info['applications'].append(f'Description: { product.Description }')
+            info['applications'].append(f'IdentifyingNumber: { product.IdentifyingNumber }')
+            info['applications'].append(f'InstallDate: { product.InstallDate }')
+            info['applications'].append(f'InstallSource: { product.InstallSource }')
+            info['applications'].append(f'InstallState: { product.InstallState }')
+            info['applications'].append(f'Language: { product.Language }')
+            info['applications'].append(f'LocalPackage: { product.LocalPackage }')
+            info['applications'].append(f'PackageCache: { product.PackageCache }')
+            info['applications'].append(f'PackageCode: { product.PackageCode }')
+            info['applications'].append(f'PackageName: { product.PackageName }')
+            info['applications'].append(f'Vendor: { product.Vendor }')
+            info['applications'].append(f'Version: { product.Version }')
+            info['applications'].append(f'WordCount: { product.WordCount }')
 # Boot Time
         tempTime = psutil.boot_time()
         bt = datetime.fromtimestamp(tempTime)
@@ -160,7 +180,7 @@ def getSystemInfo():
         logging.exception(e)
 
 systemInfo = json.loads(getSystemInfo())
-
+print(systemInfo)
 # -------------------------
 # Pass to Jinja2 Template 
 # -------------------------
@@ -171,6 +191,6 @@ parsed_output = squeegee_template.render(systemInfo = systemInfo)
 # Save the markdown file
 # -------------------------
 
-with open(f"Windows/{ systemInfo['hostname'] }.md", "w") as fh:
+with open(f"{ systemInfo['hostname'] }.md", "w") as fh:
     fh.write(parsed_output)               
     fh.close()
